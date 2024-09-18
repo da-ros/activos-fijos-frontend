@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Container, Typography } from '@mui/material';
 
 const ActivoFijoList = () => {
   const [activosFijos, setActivosFijos] = useState([]);
@@ -24,44 +25,55 @@ const ActivoFijoList = () => {
   };
 
   return (
-    <div>
-      <h2>Lista de Activos Fijos</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Porcentaje Residual</th>
-            <th>Tipo de Activo</th>
-            <th>Porcentaje de Depreciación</th>
-            <th>Depreciable</th>
-            <th>Numero de Serie</th>
-            <th>Fecha de Compra</th>
-            <th>Ubicacion Actual</th>
-          </tr>
-        </thead>
-        <tbody>
-          {activosFijos.map(activo => (
-            <tr key={activo.codigo}>
-              <td>{activo.codigo}</td>
-              <td>{activo.nombre}</td>
-              <td>{activo.precio}</td>
-              <td>{activo.porcentajeResidual}</td>
-              <td>{activo.tipoActivo}</td>
-              <td>{activo.porcentajeDepreciacion}</td>
-              <td>{activo.esDepreciable}</td>
-              <td>{activo.numeroSerie}</td>
-              <td>{activo.fechaCompra}</td>
-              <td>{activo.ubicacionActual}</td>
-              <td>
-                <button onClick={() => handleModificar(activo)}>Modificar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Container>
+      <Typography variant="h4" align="center" gutterBottom>
+        Lista de Activos Fijos
+      </Typography>
+      <TableContainer component={Paper} sx= {{marginBottom: 2}}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Código</TableCell>
+              <TableCell>Nombre</TableCell>
+              <TableCell>Precio</TableCell>
+              <TableCell>Porcentaje Residual</TableCell>
+              <TableCell>Tipo de Activo</TableCell>
+              <TableCell>Porcentaje de Depreciación</TableCell>
+              <TableCell>Depreciable</TableCell>
+              <TableCell>Numero de Serie</TableCell>
+              <TableCell>Fecha de Compra</TableCell>
+              <TableCell>Ubicacion Actual</TableCell>
+              <TableCell>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {activosFijos.map((activo) => (
+              <TableRow key={activo.codigo}>
+                <TableCell>{activo.codigo}</TableCell>
+                <TableCell>{activo.nombre}</TableCell>
+                <TableCell>{activo.precio}</TableCell>
+                <TableCell>{activo.porcentajeResidual}</TableCell>
+                <TableCell>{activo.tipoActivo}</TableCell>
+                <TableCell>{activo.porcentajeDepreciacion}</TableCell>
+                <TableCell>{activo.esDepreciable === true ? 'SI' : 'NO'}</TableCell>
+                <TableCell>{activo.numeroSerie}</TableCell>
+                <TableCell>{activo.fechaCompra}</TableCell>
+                <TableCell>{activo.ubicacionActual}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleModificar(activo)}
+                  >
+                    Modificar
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 };
 
