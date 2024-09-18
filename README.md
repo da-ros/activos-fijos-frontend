@@ -1,70 +1,145 @@
-# Getting Started with Create React App
+# Activo Fijo Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This repository contains a full-stack application for managing Activos Fijos (Fixed Assets). The backend is implemented in Java using Spring Boot, following the Builder Design Pattern for the creation of complex objects, while the frontend is developed using React and Material-UI to create a modern and user-friendly interface for interacting with the assets.
 
-In the project directory, you can run:
+The system allows users to:
 
-### `npm start`
+- Create new assets (with a minimum of required fields: codigo, nombre, and precio).
+- View the list of existing assets.
+- Modify asset details.
+- Save and persist data in a relational database using PostgreSQL.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Structure
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Backend (Spring Boot)
 
-### `npm test`
+- Controller: Manages HTTP requests for the application.
+    - ActivoFijoController: Handles the endpoints for CRUD operations on Activos Fijos.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- DTO (Data Transfer Object): Represents the data objects used for communication between layers.
+    - ActivoFijoDto: Data object passed between the service and controller layers.
 
-### `npm run build`
+- Entity: Represents the business objects stored in the database.
+    - ActivoFijoEntity: Entity class that maps to the database table for Activos Fijos.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Service: Contains the business logic of the application.
+    - ActivoFijoServiceImpl: Implements the service layer, providing the logic to handle business processes.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Repository: Handles the persistence and retrieval of data from the PostgreSQL database.
+    - ActivoFijoRepository: Extends JpaRepository to provide standard CRUD operations.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Builder Pattern: Implements the creational design pattern used for building complex objects like ActivoFijo in a more readable and maintainable way.
+    - ActivoFijoBuilder: Used to build ActivoFijo objects step-by-step, with optional attributes.
 
-### `npm run eject`
+- Database Migration: SQL scripts for database versioning and migrations.
+    - V2_Builder.sql: Create the initial table structure and add fields for Activos Fijos.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Frontend (React + Material-UI)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The frontend is implemented using React with Material-UI components for a modern and responsive interface.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Components:
+    - ActivoFijoForm.js: A form for creating new assets. Validates that codigo, nombre, and precio are not empty.
+    - ModificarActivoFijo.js: A form that allows users to edit an existing asset. Similar validations are enforced.
+    - ActivoFijoList.js: Displays a list of assets with a button to modify each asset.
+- Routing: The application uses React Router for navigating between the asset list, asset creation form, and modification form.
+    - Routes:
+        - /crear-activo: Form to create a new asset.
+        - /modificar-activo/:codigo: Form to modify an existing asset.
+        - /activo-fijo: Displays the list of assets.
 
-## Learn More
+## Class Diagram
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The class diagram shows the relationship between ActivoFijo and ActivoFijoBuilder, illustrating the use of the Builder Pattern to construct complex ActivoFijo objects.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<p align="center">
+    <img src="ClassDiagram.png">
+</p>
 
-### Code Splitting
+## Backend Design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The backend structure is as follows:
 
-### Analyzing the Bundle Size
+```
+src/main/java/ec/edu/ups/pds/
+├── controller
+│   └── ActivoFijoController.java
+├── dto
+│   └── ActivoFijoDto.java
+├── entity
+│   └── ActivoFijoEntity.java
+├── mapper
+│   └── ActivoFijoMapper.java
+├── repository
+│   └── ActivoFijoRepository.java
+├── service
+│   ├── IActivoFijoService.java
+│   └── impl
+│       └── ActivoFijoServiceImpl.java
+├── modelo
+│   └── builder
+│       └── ActivoFijoBuilder.java
+```
+### Key Backend Design Points:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Builder Pattern: The Builder pattern is used for creating ActivoFijo objects. The ActivoFijoBuilder allows for step-by-step construction, making the code more flexible and easier to maintain when handling optional parameters.
+- Repository Pattern: The ActivoFijoRepository interacts with the PostgreSQL database, handling the persistence and retrieval of Activo Fijo data.
 
-### Making a Progressive Web App
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Create Asset: POST /activo-fijo
+    - Example payload:
+    ```
+    {
+  "codigo": "001",
+  "nombre": "Laptop",
+  "precio": 1200.50,
+  "porcentajeResidual": 90,
+  "tipoActivo": 'Fijo',
+  "porcentajeDepreciacion": 10.0,
+  "esDepreciable": true,
+  "numeroSerie": "CTTRRR12"
+  "fechaCompra": "2024-09-17",
+  "ubicacionActual": "Main Office, Cuenca"
+    }
 
-### Advanced Configuration
+    ```
+- List Assets: GET /activo-fijo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Update Asset: POST /activo-fijo
 
-### Deployment
+## Screenshots
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Asset List View
 
-### `npm run build` fails to minify
+<p align="center">
+    <img src="ActivoFijoList1.png">
+</p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Asset Creation Form
+
+<p align="center">
+    <img src="ActivoFijoForm1.png">
+</p>
+<p align="center">
+    <img src="ActivoFijoForm2.png">
+</p>
+<p align="center">
+    <img src="ActivoFijoForm3.png">
+</p>
+
+### Asset Modification Form
+
+<p align="center">
+    <img src="ModificarActivoFijo1.png">
+</p>
+<p align="center">
+    <img src="ModificarActivoFijo2.png">
+</p>
+
+## Conclusion
+
+This project demonstrates how to implement a Builder Pattern for creating objects with many optional parameters, and integrates a clean architecture with Spring Boot for the backend and React for the frontend. It is a scalable and flexible system that can be easily extended with more functionality.
